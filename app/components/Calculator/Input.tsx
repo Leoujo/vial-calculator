@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
-function Input() {
-  return (
-	 <div className=' text-white flex justify-end py-4 text-5xl'>0</div>
-  )
+interface Props {
+  text: string
 }
 
-export default Input
+export const Input: React.FC<Props> = ({ text }) => {
+  return <div className=' text-white flex justify-end py-4 text-5xl'>{text === '' ? '0' : text}</div>;
+};
