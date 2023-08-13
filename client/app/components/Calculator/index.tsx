@@ -71,8 +71,6 @@ export const Calculator = () => {
     setShowHistory((prev) => !prev);
   };
 
-  console.log(history);
-
   return (
     <main className=' bg-slate-950 w-80 px-5 py-8 rounded-md '>
       <Input text={result !== '' ? result : input} />
