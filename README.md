@@ -6,7 +6,7 @@
 
 ## Summary
 
-This is a node challenge for the role of full-stack developer at Parcelex.
+This is a challenge for the role of Software Engineer at Vial.
 
 ## Quick Start
 
@@ -14,34 +14,16 @@ This is a node challenge for the role of full-stack developer at Parcelex.
 
 `git clone https://github.com/Leoujo/vial-calculator`
 
-### CLIENT
+### 1 Go into the client and the server folder
 
-### 1. Enter the client folder
+`cd client` or `cd server`
 
-`cd client`
+### 2. Add .env file (create based on the .env.template folder)
 
-### 1. Add .env file (create based on the .env.template folder)
-
-### 2. Install node modules
+### 3. Install node modules
 
 `pnpm install`
 
-### 3. Run the frontend
-
-`pnpm dev`
-
-### SERVER
-
-### 1. Enter the server folder
-
-`cd server`
-
-### 1. Add .env file (create based on the .env.template folder)
-
-### 2. Install node modules
-
-`pnpm install`
-
-### 3. Run the backend
+### 4. Run the application
 
 `pnpm dev`
