@@ -1,4 +1,4 @@
-# Node Challenge
+# Calculator Challenge
 
 <div align="center">
 	<img src="https://mma.prnewswire.com/media/1724383/general_Logo.jpg?p=publish" />
@@ -18,7 +18,7 @@ This is a challenge for the role of Software Engineer at Vial.
 
 `cd client` or `cd server`
 
-### 2. Add .env file (create based on the .env.template folder)
+### 2. Add the .env file (based on the .env.template)
 
 ### 3. Install node modules
 
