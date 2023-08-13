@@ -10,13 +10,42 @@ export const Calculator = () => {
   // Calculator
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
+  const [memory, setMemory] = useState('');
 
   // History
   const [showHistory, setShowHistory] = useState(false);
 
   // Calculator's logic
   const handleButtonClick = (value: string) => {
-    setInput(input + value);
+    if (value === '√x') {
+      try {
+        const sqrtResult = Math.sqrt(eval(input));
+        setInput(sqrtResult.toString());
+      } catch (error) {
+        setInput('Error');
+      }
+    } else if (value === '%') {
+      try {
+        const percentage = eval(input) / 100;
+        setInput(percentage.toString());
+      } catch (error) {
+        setInput('Error');
+      }
+    } else if (value === 'M+') {
+      // Add the current input to memory
+      setMemory(input);
+    } else if (value === 'M-') {
+      // Subtract the current input from memory
+      setMemory('10');
+    } else if (value === 'MR') {
+      // Recall memory value and set it as input
+      setInput(memory);
+    } else if (value === 'MC') {
+      // Clear the memory
+      setMemory('');
+    } else {
+      setInput(input + value);
+    }
   };
 
   const handleCalculate = () => {
@@ -44,18 +73,18 @@ export const Calculator = () => {
         <div className='flex justify-around grid grid-cols-4 gap-4'>
           <Button onClick={handleButtonClick} type='memoryFunction' text='M+' />
           <Button onClick={handleButtonClick} type='memoryFunction' text='M-' />
-          <Button onClick={handleButtonClick} type='memoryFunction' text='MR' />
+          <Button onClick={handleButtonClick} type='memoryFunction' text='MR' isMemoryInUse={memory !== ''} />
           <Button onClick={handleButtonClick} type='memoryFunction' text='MC' />
 
           <Button onClick={handleClear} type='function' text='AC' />
           <Button onClick={handleButtonClick} type='function' text='√x' />
-          <Button onClick={handleButtonClick} type='function' text='x^y' />
-          <Button onClick={handleButtonClick} type='operation' text='/' />
+          <Button onClick={handleButtonClick} type='function' text='x^y' specifyValue='**' />
+          <Button onClick={handleButtonClick} type='operation' text='÷' specifyValue='/' />
 
           <Button onClick={handleButtonClick} type='number' text='7' />
           <Button onClick={handleButtonClick} type='number' text='8' />
           <Button onClick={handleButtonClick} type='number' text='9' />
-          <Button onClick={handleButtonClick} type='operation' text='x' specifyValue={'*'} />
+          <Button onClick={handleButtonClick} type='operation' text='x' specifyValue='*' />
 
           <Button onClick={handleButtonClick} type='number' text='4' />
           <Button onClick={handleButtonClick} type='number' text='5' />
@@ -69,7 +98,7 @@ export const Calculator = () => {
 
           <Button onClick={handleButtonClick} type='number' text='0' />
 
-          <Button onClick={handleButtonClick} type='number' text=',' />
+          <Button onClick={handleButtonClick} type='number' text='.' />
           <Button onClick={handleButtonClick} type='number' text='%' />
           <Button onClick={handleCalculate} type='operation' text='=' />
         </div>

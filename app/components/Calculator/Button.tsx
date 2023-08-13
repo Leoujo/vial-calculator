@@ -5,17 +5,21 @@ interface Props {
   text: string;
   onClick: (value: string) => void;
   specifyValue?: string;
+  isMemoryInUse?: boolean;
 }
 
-export const Button: React.FC<Props> = ({ type, text, onClick, specifyValue }) => {
+export const Button: React.FC<Props> = ({ type, text, onClick, specifyValue, isMemoryInUse }) => {
   const buttonBackgroundColor = () => {
     switch (type) {
       case 'operation':
         return 'bg-[#FF9500]';
       case 'function':
         return 'bg-[#D4D4D2]';
-		case 'memoryFunction':
-			return 'bg-[#393939]';
+      case 'memoryFunction':
+        if (isMemoryInUse) {
+			return 'bg-[#727171]';
+        }
+        return 'bg-[#393939]';
       default:
         return 'bg-[#505050]';
     }
