@@ -5,7 +5,6 @@ import { Button } from './Button';
 import { Input } from './Input';
 import { HistoryButton } from './HistoryButton';
 import { HistoryArea } from './HistoryArea';
-import Auth from '../Auth';
 
 export const Calculator = () => {
   // Calculator
@@ -15,11 +14,14 @@ export const Calculator = () => {
 
   // History
   const [showHistory, setShowHistory] = useState(false);
+  const [history, setHistory] = useState<string[]>([]);
 
   // Calculator's logic
   const handleButtonClick = (value: string) => {
+   setResult('');
     if (value === '√x') {
       try {
+        setHistory((prev) => [...prev, `√${input}`]);
         const sqrtResult = Math.sqrt(eval(input));
         setInput(sqrtResult.toString());
       } catch (error) {
@@ -27,6 +29,7 @@ export const Calculator = () => {
       }
     } else if (value === '%') {
       try {
+        setHistory((prev) => [...prev, `${input}%`]);
         const percentage = eval(input) / 100;
         setInput(percentage.toString());
       } catch (error) {
@@ -51,6 +54,7 @@ export const Calculator = () => {
 
   const handleCalculate = () => {
     try {
+      setHistory((prev) => [...prev, input]);
       setResult(eval(input).toString());
     } catch (error) {
       setResult('Error');
@@ -66,6 +70,8 @@ export const Calculator = () => {
   const toggleShowHistory = () => {
     setShowHistory((prev) => !prev);
   };
+
+  console.log(history);
 
   return (
     <main className=' bg-slate-950 w-80 px-5 py-8 rounded-md '>
@@ -103,7 +109,7 @@ export const Calculator = () => {
         <Button onClick={handleCalculate} type='operation' text='=' />
       </div>
       <HistoryButton toggleShowHistory={toggleShowHistory} showHistory={showHistory} />
-      <HistoryArea showHistory={showHistory} />
+      <HistoryArea showHistory={showHistory} history={history} />
     </main>
   );
 };

@@ -6,15 +6,12 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'; // Import yupResolver
-import { signUpUser } from '@/app/api/services/auth';
+import { logInUser, signUpUser } from '@/app/api/services/auth';
+import { User } from '@/app/types/user';
 
 interface Props {
-  type: 'logIn' | 'signUp';
-}
-
-interface FormData {
-  email: string;
-  password: string;
+  type: string;
+  decodeTokenHandler: () => void;
 }
 
 const validationSchema = yup.object().shape({
@@ -22,18 +19,23 @@ const validationSchema = yup.object().shape({
   password: yup.string().required('Password is required'),
 });
 
-export const AuthModal: React.FC<Props> = ({ type }) => {
+export const AuthModal: React.FC<Props> = ({ type, decodeTokenHandler }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<User>({
     resolver: yupResolver(validationSchema),
   });
 
   const openModal = () => {
+    if (type === 'signOut') {
+      localStorage.removeItem('token');
+		decodeTokenHandler();
+      return;
+    }
     setIsModalOpen(true);
   };
 
@@ -41,21 +43,21 @@ export const AuthModal: React.FC<Props> = ({ type }) => {
     setIsModalOpen(false);
   };
 
-  const isSignUp = () => {
-    return type === 'signUp';
-  };
-
-  const onSubmit = async (data: FormData) => {
-    await signUpUser(data);
-
+  const onSubmit = async (data: User) => {
+    if (type === 'signIn') {
+      await signUpUser(data);
+    } else if (type === 'logIn') {
+      await logInUser(data);
+    }
+    decodeTokenHandler();
     closeModal();
   };
 
   return (
     <div className='flex justify-center items-center '>
       {/* Button to open the modal */}
-      <button onClick={openModal} className=' text-black py-2 px-4 rounded hover:font-bold hover:text-[#FF9500]'>
-        {isSignUp() ? 'Sign in' : 'Log in'}
+      <button onClick={openModal} className='  py-2 px-4 rounded font-bold text-[#FF9500]'>
+        {type}
       </button>
 
       {/* The modal */}
@@ -69,7 +71,7 @@ export const AuthModal: React.FC<Props> = ({ type }) => {
               <Input type='email' placeholder='email@email.com' register={register} errorMessage={errors.email?.message} />
               <Input type='password' placeholder='********' register={register} errorMessage={errors.password?.message} />
               <button type='submit' className=' bg-[#FF9500] text-white font-bold py-2 px-4 w-full rounded'>
-                {isSignUp() ? 'Sign In' : 'Log In'}
+                {type}
               </button>
             </form>
           </div>
