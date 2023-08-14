@@ -1,15 +1,18 @@
 'use client';
 
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AuthModal } from './AuthModal';
 import { User } from '@/app/types/user';
 import { logInUser, signUpUser } from '@/app/api/services/auth';
 import { decodeTokenHandler } from '@/app/utils/utilts';
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function Auth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+
+  const notifyError = () => toast.error('Error on auth!');
+  const notifySuccess = () => toast.success('Auth successfull!');
 
   const apiHandler = async (type: string, data: User) => {
     setLoading(true);
@@ -17,12 +20,14 @@ export default function Auth() {
       if (type === 'signUp') {
         const userData = await signUpUser(data);
         setUser(userData);
+        notifySuccess();
       } else if (type === 'logIn') {
         const userData = await logInUser(data);
         setUser(userData);
+        notifySuccess();
       }
     } catch (error) {
-      setError(true);
+      notifyError();
     }
 
     setLoading(false);
@@ -30,6 +35,7 @@ export default function Auth() {
 
   const signOutHandler = () => {
     setUser(null);
+    localStorage.removeItem('jwt');
   };
 
   // If pages reloads and jwt is valid, user should persist.
@@ -44,9 +50,11 @@ export default function Auth() {
   // Controls what should be render on loading, error and etc.
   const authWrapper = () => {
     if (loading) {
-      return 'loading...';
-    } else if (error) {
-      return 'error!';
+      return (
+        <div role='status' className='max-w-sm animate-pulse'>
+          <div className='h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-60 mb-2'></div>
+        </div>
+      );
     } else if (user) {
       return (
         <>
@@ -67,5 +75,10 @@ export default function Auth() {
     }
   };
 
-  return <div className='bg-slate-100 w-80 p-4 mb-4 flex justify-center items-center'>{authWrapper()}</div>;
+  return (
+    <div className='bg-slate-100 w-80 p-4 mb-4 flex justify-center items-center'>
+      <Toaster />
+      {authWrapper()}
+    </div>
+  );
 }

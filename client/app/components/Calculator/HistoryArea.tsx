@@ -9,7 +9,7 @@ export const HistoryArea: React.FC<Props> = ({ showHistory, history }) => {
   return (
     <>
       {showHistory && (
-        <div className='bg-white p-2 rounded-md'>
+        <div className='bg-white p-2 rounded-md text-center'>
           {history.map((operation, key) => (
             <div key={key}>{operation}</div>
           ))}

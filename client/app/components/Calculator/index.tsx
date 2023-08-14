@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Button } from './Button';
 import { Input } from './Input';
 import { HistoryButton } from './HistoryButton';
@@ -18,7 +18,7 @@ export const Calculator = () => {
 
   // Calculator's logic
   const handleButtonClick = (value: string) => {
-   setResult('');
+    setResult('');
     if (value === '√x') {
       try {
         setHistory((prev) => [...prev, `√${input}`]);
@@ -37,10 +37,18 @@ export const Calculator = () => {
       }
     } else if (value === 'M+') {
       // Add the current input to memory
-      setMemory(input);
+      const inputCopy = input === '' ? 0 : parseInt(input);
+      const memoryCopy = memory === '' ? 0 : parseInt(memory);
+      const finalResult = (memoryCopy + inputCopy).toString();
+      setMemory(finalResult);
+      // setMemory(input);
     } else if (value === 'M-') {
       // Subtract the current input from memory
-      setMemory('10');
+      // Add the current input to memory
+      const inputCopy = input === '' ? 0 : parseInt(input);
+      const memoryCopy = memory === '' ? 0 : parseInt(memory);
+      const finalResult = (memoryCopy - inputCopy).toString();
+      setMemory(finalResult);
     } else if (value === 'MR') {
       // Recall memory value and set it as input
       setInput(memory);
@@ -56,6 +64,7 @@ export const Calculator = () => {
     try {
       setHistory((prev) => [...prev, input]);
       setResult(eval(input).toString());
+      setInput(eval(input).toString());
     } catch (error) {
       setResult('Error');
     }
@@ -106,8 +115,12 @@ export const Calculator = () => {
         <Button onClick={handleButtonClick} type='number' text='%' />
         <Button onClick={handleCalculate} type='operation' text='=' />
       </div>
-      <HistoryButton toggleShowHistory={toggleShowHistory} showHistory={showHistory} />
-      <HistoryArea showHistory={showHistory} history={history} />
+      {history.length && (
+        <>
+          <HistoryButton toggleShowHistory={toggleShowHistory} showHistory={showHistory} />
+          <HistoryArea showHistory={showHistory} history={history} />
+        </>
+      )}
     </main>
   );
 };

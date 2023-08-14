@@ -17,7 +17,7 @@ export const Button: React.FC<Props> = ({ type, text, onClick, specifyValue, isM
         return 'bg-[#D4D4D2]';
       case 'memoryFunction':
         if (isMemoryInUse) {
-			return 'bg-[#727171]';
+          return 'bg-[#727171]';
         }
         return 'bg-[#393939]';
       default:
@@ -43,6 +43,7 @@ export const Button: React.FC<Props> = ({ type, text, onClick, specifyValue, isM
       onClick={handleClick}
       value={specifyValue ? specifyValue : text}
       className={`
+			focus:ring-4 focus:ring-slate-50
 			${buttonBackgroundColor()} 
 			h-14 
 			rounded-full 
