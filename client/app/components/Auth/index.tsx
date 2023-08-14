@@ -1,52 +1,71 @@
 'use client';
-import jwt from 'jsonwebtoken'; // Import the jwt library
 
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { AuthModal } from './AuthModal';
+import { User } from '@/app/types/user';
+import { logInUser, signUpUser } from '@/app/api/services/auth';
+import { decodeTokenHandler } from '@/app/utils/utilts';
 
 export default function Auth() {
-  const [userEmail, setUserEmail] = useState(null);
-  // Check if has a valid jwt to get the data from.
-  const decodeTokenHandler = () => {
-    let token = localStorage.getItem('token');
-    if (!token) {
-      setUserEmail(null);
-    }
-    const decodedToken = jwt.decode(token);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-    if (!decodedToken) {
-      return;
+  const apiHandler = async (type: string, data: User) => {
+    setLoading(true);
+    try {
+      if (type === 'signUp') {
+        const userData = await signUpUser(data);
+        setUser(userData);
+      } else if (type === 'logIn') {
+        const userData = await logInUser(data);
+        setUser(userData);
+      }
+    } catch (error) {
+      setError(true);
     }
 
-    // Check expiration time
-    const currentTime = Date.now() / 1000; // Convert to seconds
-    if (decodedToken.exp && decodedToken.exp < currentTime) {
-      return;
-    }
-
-    // If it's all good, update user's email.
-    setUserEmail(decodedToken.userEmail);
+    setLoading(false);
   };
 
-  // Updates the state if user reloads.
+  const signOutHandler = () => {
+    setUser(null);
+  };
+
+  // If pages reloads and jwt is valid, user should persist.
   useEffect(() => {
-    decodeTokenHandler();
+    const decodedToken = decodeTokenHandler();
+    if (decodedToken) {
+      setUser(decodedToken);
+    }
+    setLoading(false);
   }, []);
 
-  return (
-    <div className='bg-slate-100 w-80 p-4 mb-4 flex justify-center items-center'>
-      {userEmail ? (
+  // Controls what should be render on loading, error and etc.
+  const authWrapper = () => {
+    if (loading) {
+      return 'loading...';
+    } else if (error) {
+      return 'error!';
+    } else if (user) {
+      return (
         <>
-          <p>Welcome {userEmail}!</p>
-          <AuthModal type='signOut' decodeTokenHandler={decodeTokenHandler} />
+          <p>Welcome {user.email}!</p>
+          <button onClick={signOutHandler} className='py-2 px-4 rounded font-bold text-[#FF9500]'>
+            signOut
+          </button>
         </>
-      ) : (
+      );
+    } else {
+      return (
         <>
-          <AuthModal type='logIn' decodeTokenHandler={decodeTokenHandler} />
+          <AuthModal type='logIn' apiHandler={apiHandler} />
           <p>or</p>
-          <AuthModal type='signUp' decodeTokenHandler={decodeTokenHandler} />
+          <AuthModal type='signUp' apiHandler={apiHandler} />
         </>
-      )}
-    </div>
-  );
+      );
+    }
+  };
+
+  return <div className='bg-slate-100 w-80 p-4 mb-4 flex justify-center items-center'>{authWrapper()}</div>;
 }

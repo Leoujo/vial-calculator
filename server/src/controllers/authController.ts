@@ -24,7 +24,7 @@ export const signup = async (req: Request, res: Response) => {
 
     const token = generateAuthToken(user);
 
-    res.status(201).json({ token });
+    res.status(201).json({ user, token });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'An error occurred' });
@@ -52,7 +52,7 @@ export const login = async (req: Request, res: Response) => {
     // Sending token
     const token = generateAuthToken(user);
 
-    res.status(200).json({ token });
+    res.status(200).json({ user, token });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'An error occurred' });

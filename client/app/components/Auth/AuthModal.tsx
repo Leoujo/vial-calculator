@@ -6,12 +6,11 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'; // Import yupResolver
-import { logInUser, signUpUser } from '@/app/api/services/auth';
 import { User } from '@/app/types/user';
 
 interface Props {
   type: string;
-  decodeTokenHandler: () => void;
+  apiHandler: (type: string, data: User) => void;
 }
 
 const validationSchema = yup.object().shape({
@@ -19,7 +18,7 @@ const validationSchema = yup.object().shape({
   password: yup.string().required('Password is required'),
 });
 
-export const AuthModal: React.FC<Props> = ({ type, decodeTokenHandler }) => {
+export const AuthModal: React.FC<Props> = ({ type, apiHandler }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -31,11 +30,6 @@ export const AuthModal: React.FC<Props> = ({ type, decodeTokenHandler }) => {
   });
 
   const openModal = () => {
-    if (type === 'signOut') {
-      localStorage.removeItem('token');
-		decodeTokenHandler();
-      return;
-    }
     setIsModalOpen(true);
   };
 
@@ -44,12 +38,7 @@ export const AuthModal: React.FC<Props> = ({ type, decodeTokenHandler }) => {
   };
 
   const onSubmit = async (data: User) => {
-    if (type === 'signIn') {
-      await signUpUser(data);
-    } else if (type === 'logIn') {
-      await logInUser(data);
-    }
-    decodeTokenHandler();
+    apiHandler(type, data);
     closeModal();
   };
 
@@ -63,7 +52,7 @@ export const AuthModal: React.FC<Props> = ({ type, decodeTokenHandler }) => {
       {/* The modal */}
       {isModalOpen && (
         <div className='bg-black bg-opacity-75 fixed inset-0 flex justify-center items-center z-50'>
-          <div className='bg-white shadow-md rounded p-8 rounded shadow-lg w-1/5'>
+          <div className='bg-white shadow-md rounded p-8 rounded shadow-lg w-82'>
             <div className='flex justify-end cursor-pointer'>
               <AiOutlineClose size={20} onClick={closeModal} />
             </div>
