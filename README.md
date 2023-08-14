@@ -7,6 +7,8 @@
 ## Summary
 
 This is a challenge for the role of Software Engineer at Vial.
+- [Design documentation - pdf](https://github.com/Leoujo/vial-calculator/blob/main/docs/design.md)
+- [Design documentation - md](https://github.com/Leoujo/vial-calculator/blob/main/docs/design.pdf)
 
 ## Quick Start
 
