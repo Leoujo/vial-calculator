@@ -11,7 +11,7 @@ export default function Auth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const notifyError = () => toast.error('Error on auth!');
+  const notifyError = (text: string) => toast.error(text ? text : 'Error on auth!');
   const notifySuccess = () => toast.success('Auth successfull!');
 
   const apiHandler = async (type: string, data: User) => {
@@ -26,8 +26,8 @@ export default function Auth() {
         setUser(userData);
         notifySuccess();
       }
-    } catch (error) {
-      notifyError();
+    } catch (error: any) {
+      notifyError(error.response?.data?.error);
     }
 
     setLoading(false);
