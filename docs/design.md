@@ -42,6 +42,6 @@ Empowering users to perform advanced calculations, the calculator features an ex
 
 The calculator's history function diligently tracks and showcases a log of calculations. This feature allow users to revisit and reuse previous calculations.
 
-## 6**. Conclusion**
+## **6. Conclusion**
 
 This calculator is possess numerous powerful features. In addition, it effectively displays the user's authentication status. This application leverages cutting-edge technologies such as Next, enabling server-side rendering for improved frontend performance, along with robust tools like Node, Express, and MongoDB for efficient backend authentication handling.
