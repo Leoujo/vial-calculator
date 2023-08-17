@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from './Button';
 import { Input } from './Input';
 import { HistoryButton } from './HistoryButton';
