@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AuthModal } from './AuthModal';
 import { User } from '@/app/types/user';
 import { logInUser, signUpUser } from '@/app/api/services/auth';
-import { decodeTokenHandler } from '@/app/utils/utilts';
 import { Toaster, toast } from 'react-hot-toast';
 import { useAuth } from '@/app/hooks/useAuth';
 
