@@ -15,48 +15,38 @@ export const Calculator = () => {
   // History
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
-
-  // Calculator's logic
-  const handleButtonClick = (value: string) => {
+  
+  // Handles general logic.
+  const handleButton = (value: string) => {
     setResult('');
     if (value === '√x') {
-      try {
-        setHistory((prev) => [...prev, `√${input}`]);
-        const sqrtResult = Math.sqrt(eval(input));
-        setInput(sqrtResult.toString());
-      } catch (error) {
-        setInput('Error');
-      }
+      setHistory((prev) => [...prev, `√${input}`]);
+      const sqrtResult = Math.sqrt(eval(input));
+      setInput(sqrtResult.toString());
     } else if (value === '%') {
-      try {
-        setHistory((prev) => [...prev, `${input}%`]);
-        const percentage = eval(input) / 100;
-        setInput(percentage.toString());
-      } catch (error) {
-        setInput('Error');
-      }
-    } else if (value === 'M+') {
-      // Add the current input to memory
-      const inputCopy = input === '' ? 0 : parseInt(input);
-      const memoryCopy = memory === '' ? 0 : parseInt(memory);
-      const finalResult = (memoryCopy + inputCopy).toString();
-      setMemory(finalResult);
-      // setMemory(input);
-    } else if (value === 'M-') {
-      // Subtract the current input from memory
-      // Add the current input to memory
-      const inputCopy = input === '' ? 0 : parseInt(input);
-      const memoryCopy = memory === '' ? 0 : parseInt(memory);
-      const finalResult = (memoryCopy - inputCopy).toString();
-      setMemory(finalResult);
-    } else if (value === 'MR') {
-      // Recall memory value and set it as input
-      setInput(memory);
-    } else if (value === 'MC') {
-      // Clear the memory
-      setMemory('');
+      setHistory((prev) => [...prev, `${input}%`]);
+      const percentage = eval(input) / 100;
+      setInput(percentage.toString());
     } else {
       setInput(input + value);
+    }
+  };
+
+  // Handles only memory related logic.
+  const handleMemoryButton = (memoryOption: string) => {
+    const inputCopy = input === '' ? 0 : parseInt(input);
+    const memoryCopy = memory === '' ? 0 : parseInt(memory);
+
+    if (memoryOption === 'M+') {
+      const sumString = (memoryCopy + inputCopy).toString();
+      setMemory(sumString);
+    } else if (memoryOption === 'M-') {
+      const subtractionString = (memoryCopy - inputCopy).toString();
+      setMemory(subtractionString);
+    } else if (memoryOption === 'MR') {
+      setInput(memory);
+    } else {
+      setMemory('');
     }
   };
 
@@ -84,35 +74,35 @@ export const Calculator = () => {
     <main className=' bg-slate-950 w-80 px-5 py-8 rounded-md '>
       <Input text={result !== '' ? result : input} />
       <div className='flex justify-around grid grid-cols-4 gap-4'>
-        <Button onClick={handleButtonClick} type='memoryFunction' text='M+' />
-        <Button onClick={handleButtonClick} type='memoryFunction' text='M-' />
-        <Button onClick={handleButtonClick} type='memoryFunction' text='MR' isMemoryInUse={memory !== ''} />
-        <Button onClick={handleButtonClick} type='memoryFunction' text='MC' />
+        <Button onClick={handleMemoryButton} type='memoryFunction' text='M+' />
+        <Button onClick={handleMemoryButton} type='memoryFunction' text='M-' />
+        <Button onClick={handleMemoryButton} type='memoryFunction' text='MR' isMemoryInUse={memory !== ''} />
+        <Button onClick={handleMemoryButton} type='memoryFunction' text='MC' />
 
         <Button onClick={handleClear} type='function' text='AC' />
-        <Button onClick={handleButtonClick} type='function' text='√x' />
-        <Button onClick={handleButtonClick} type='function' text='x^y' specifyValue='**' />
-        <Button onClick={handleButtonClick} type='operation' text='÷' specifyValue='/' />
+        <Button onClick={handleButton} type='function' text='√x' />
+        <Button onClick={handleButton} type='function' text='x^y' specifyValue='**' />
+        <Button onClick={handleButton} type='operation' text='÷' specifyValue='/' />
 
-        <Button onClick={handleButtonClick} type='number' text='7' />
-        <Button onClick={handleButtonClick} type='number' text='8' />
-        <Button onClick={handleButtonClick} type='number' text='9' />
-        <Button onClick={handleButtonClick} type='operation' text='x' specifyValue='*' />
+        <Button onClick={handleButton} type='number' text='7' />
+        <Button onClick={handleButton} type='number' text='8' />
+        <Button onClick={handleButton} type='number' text='9' />
+        <Button onClick={handleButton} type='operation' text='x' specifyValue='*' />
 
-        <Button onClick={handleButtonClick} type='number' text='4' />
-        <Button onClick={handleButtonClick} type='number' text='5' />
-        <Button onClick={handleButtonClick} type='number' text='6' />
-        <Button onClick={handleButtonClick} type='operation' text='-' />
+        <Button onClick={handleButton} type='number' text='4' />
+        <Button onClick={handleButton} type='number' text='5' />
+        <Button onClick={handleButton} type='number' text='6' />
+        <Button onClick={handleButton} type='operation' text='-' />
 
-        <Button onClick={handleButtonClick} type='number' text='1' />
-        <Button onClick={handleButtonClick} type='number' text='2' />
-        <Button onClick={handleButtonClick} type='number' text='3' />
-        <Button onClick={handleButtonClick} type='operation' text='+' />
+        <Button onClick={handleButton} type='number' text='1' />
+        <Button onClick={handleButton} type='number' text='2' />
+        <Button onClick={handleButton} type='number' text='3' />
+        <Button onClick={handleButton} type='operation' text='+' />
 
-        <Button onClick={handleButtonClick} type='number' text='0' />
+        <Button onClick={handleButton} type='number' text='0' />
 
-        <Button onClick={handleButtonClick} type='number' text='.' />
-        <Button onClick={handleButtonClick} type='number' text='%' />
+        <Button onClick={handleButton} type='number' text='.' />
+        <Button onClick={handleButton} type='number' text='%' />
         <Button onClick={handleCalculate} type='operation' text='=' />
       </div>
       {history.length && (
