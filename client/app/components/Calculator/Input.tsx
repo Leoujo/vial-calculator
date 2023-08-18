@@ -12,5 +12,5 @@ export const Input: React.FC<Props> = ({ text }) => {
     return text;
   };
 
-  return <div className=' text-white flex justify-end py-4 text-5xl break-all'>{textHandler()}</div>;
+  return <div data-testid="calculator-result" className=' text-white flex justify-end py-4 text-5xl break-all'>{textHandler()}</div>;
 };

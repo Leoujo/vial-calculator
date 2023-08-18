@@ -1,51 +1,34 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AuthModal } from './AuthModal';
 import { User } from '@/app/types/user';
 import { logInUser, signUpUser } from '@/app/api/services/auth';
-import { decodeTokenHandler } from '@/app/utils/utilts';
 import { Toaster, toast } from 'react-hot-toast';
+import { useAuth } from '@/app/hooks/useAuth';
 
 export default function Auth() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, logInHandler, logOutHandler, loading } = useAuth();
 
   const notifyError = (text: string) => toast.error(text ? text : 'Error on auth!');
   const notifySuccess = () => toast.success('Auth successfull!');
 
+  // handle api requests.
   const apiHandler = async (type: string, data: User) => {
-    setLoading(true);
     try {
       if (type === 'signUp') {
         const userData = await signUpUser(data);
-        setUser(userData);
+        logInHandler(userData);
         notifySuccess();
       } else if (type === 'logIn') {
         const userData = await logInUser(data);
-        setUser(userData);
+        logInHandler(userData);
         notifySuccess();
       }
     } catch (error: any) {
       notifyError(error.response?.data?.error);
     }
-
-    setLoading(false);
   };
-
-  const signOutHandler = () => {
-    setUser(null);
-    localStorage.removeItem('jwt');
-  };
-
-  // If pages reloads and jwt is valid, user should persist.
-  useEffect(() => {
-    const decodedToken = decodeTokenHandler();
-    if (decodedToken) {
-      setUser(decodedToken);
-    }
-    setLoading(false);
-  }, []);
 
   // Controls what should be render on loading, error and etc.
   const authWrapper = () => {
@@ -59,7 +42,7 @@ export default function Auth() {
       return (
         <>
           <p>Welcome {user.email}!</p>
-          <button onClick={signOutHandler} className='py-2 px-4 rounded font-bold text-[#FF9500]'>
+          <button onClick={logOutHandler} className='py-2 px-4 rounded font-bold text-[#FF9500]'>
             signOut
           </button>
         </>
